@@ -93,3 +93,8 @@ h1 {
     box-shadow: var(--customBoxShadow);
     cursor: pointer;
 }
+
+#players {
+    color: var(--lightGrey);
+    font-size: 3rem;
+}

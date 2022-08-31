@@ -1,77 +1,66 @@
-// Goal have as little global code as possible!
-
-// Rule: If you need ONE of something (gameBoard, displayController) use a module.
-// Rule: If you need TWO+ of something (players), create them with factories.
-
-// Create a factory function object for the players
-
-// Create a factory function to control the flow of the game.
-
-// Create a function that allows players to add marks to a specific spot on the board. Don't allow players to play in spots already taken.
-
-// Build logic that checks if the game is over. Should check if 3 in a row and a tie. Display who the winner is on screen.
-
-// Add buttons for starting and restarting the game.
-
-// (Optional)
-// Build an AI so players can play against the computer.
-// - After player starts, AI chooses a random legal move.
-// - Possible to make an unbeatable AI by using the minimax algorithm.
-
 const gameSpots = document.querySelectorAll(".gameSpot");
+const player = document.getElementById('players');
+const restartBtn = document.getElementById('restartBtn');
 
-gameSpots.forEach((gameSpot) => {
-    gameSpot.addEventListener('click', (e) => {
-        if(e.target.textContent == ""){
-            console.log(e)
-            let clickedSpot = e
-            gameController.playRound(clickedSpot)
-        } else if(e.target.textContent != ""){
-            return
+
+let turn = 0;
+
+function Player(name, mark) {
+    this.name = name;
+    this.mark = mark;
+}
+
+const player1 = new Player("Player 1", "X");
+const player2 = new Player("Player 2", "O");
+
+gameSpots.forEach((spot) => {
+    spot.addEventListener('click', (e) => {
+        // if spot is empty, add mark to spot and update turn counter. Alternate player1 and player2 based on turn.
+        if (spot.innerHTML === "") {
+            if (turn % 2 === 0) {
+                spot.innerHTML = player1.mark;
+                turn++;
+            } else {
+                spot.innerHTML = player2.mark;
+                turn++;
+            }
         }
+        checkForWinner();
     })
 })
 
-const gameBoard = (() =>{
-    const board = ["", "", "", "", "", "", "", "", ""]; // 9 board tiles
-
-})
-
-const displayController = (() => {
-
-    const updateGameBoard = () => {
-
+// checkForWinner and update the player variable to display the winner.
+function checkForWinner() {
+    // winning combinations for tic tac toe
+    const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+    // loop through winning combinations
+    for (let i = 0; i < winningCombinations.length; i++) {
+        // get the spots for the current combination
+        const [a, b, c] = winningCombinations[i];
+        // get the values of the spots
+        const aValue = gameSpots[a].innerHTML;
+        const bValue = gameSpots[b].innerHTML;
+        const cValue = gameSpots[c].innerHTML;
+        // if all three spots have the same value, then there is a winner
+        if (aValue !== "" && aValue === bValue && aValue === cValue) {
+            player.innerHTML = aValue + " is the winner!";
+        }
     }
+}
 
-    const setResultMessage = ((winner) => {
-
-    })
-    return { setResultMessage, } // Acts as a way to export out the function factory.
+restartBtn.addEventListener('click', (e) => {
+    gameSpots.forEach((spot) => {
+        spot.innerHTML = "";
+    }),
+    player.innerHTML = "";
+    turn = 0;
 })
-
-
-const gameController = (() =>{
-
-    const playRound = (boardIndex) => {
-        
-    }
-
-    const checkWinner = (boardIndex) => {
-        const winConditions = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
-
-        return winConditions
-    }
-
-    return { playRound, }
-})
-
-
